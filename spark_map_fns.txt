@@ -1,0 +1,34 @@
+#After putting the files join1_FileA.txt and join1_fileB.txt in hdfs, 
+#run PySpark on terminal and name them fileA and fileB respectively.
+#The following code is to be typed in PySpark console with indentation
+
+#mapper function for filA
+def split_fileA(line):
+	pair=line.split(",")
+	word=pair[0]
+	count=pair[1]
+	c=int(count)
+	return(word, c)
+
+fileA_data=fileA.map(split_fileA)
+
+fileA_data.collect()
+
+#mapper function for fileB
+def split_fileB(line):
+	line=line.strip()
+	key_value=line.split(",")
+	key_in=key_value[0].split(" ")
+	value_in=key_value[1]
+	date=key_in[0]
+	word=key_in[1]
+	return(word, date + " " + value_in)
+
+fileB_data=fileB.map(split_fileB)
+fileB_data.collect()
+
+#joining the generated datasets
+fileB_joined_fileA=fileB_data.join(fileA_data)
+fileB_joined_fileA.collect()
+
+
